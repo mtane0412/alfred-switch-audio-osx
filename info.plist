@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>bundleid</key>
+	<string></string>
+	<key>connections</key>
+	<dict>
+		<key>EED47B98-F6AB-453E-95B2-E7E5CA250C50</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>E3917A0D-B94C-43CE-8D71-D5A55CC5F01F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>F4309860-D62E-49FF-BD43-97D1C5CCD0EF</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F6A50B1C-B8EE-468A-978D-F8BA09B8BD8B</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>CC7CA474-A46A-4AF2-97CD-789277FD7AE8</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>18DE991B-3DE7-4797-820D-F5E23A59760E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+	</dict>
+	<key>createdby</key>
+	<string>mtane0412</string>
+	<key>description</key>
+	<string></string>
+	<key>disabled</key>
+	<false/>
+	<key>name</key>
+	<string>switchaudio</string>
+	<key>objects</key>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>audio in</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>please wait...</string>
+				<key>script</key>
+				<string>on run argv
+    -- SwitchAudioSourceコマンドを実行してオーディオデバイスのリストを取得
+    set audioDevices to paragraphs of (do shell script "/opt/homebrew/bin/SwitchAudioSource -a -t input")
+    
+    -- JSON形式の出力を構築
+    set jsonOutput to "{\"items\": ["
+    repeat with i from 1 to count of audioDevices
+        set thisDevice to item i of audioDevices
+        set jsonOutput to jsonOutput &amp; "{\"uid\": \"" &amp; i &amp; "\", \"title\": \"" &amp; thisDevice &amp; "\", \"arg\": \"" &amp; thisDevice &amp; "\"}"
+        if i is not count of audioDevices then
+            set jsonOutput to jsonOutput &amp; ","
+        end if
+    end repeat
+    set jsonOutput to jsonOutput &amp; "]}"
+    
+    return jsonOutput
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>audio in</string>
+				<key>title</key>
+				<string>Switch Mic</string>
+				<key>type</key>
+				<integer>6</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>F6A50B1C-B8EE-468A-978D-F8BA09B8BD8B</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+				<key>title</key>
+				<string>Audio input switched: {query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>CC7CA474-A46A-4AF2-97CD-789277FD7AE8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>on run argv
+    set deviceName to item 1 of argv
+    set switchCommand to "/opt/homebrew/bin/SwitchAudioSource -t input -s " &amp; quoted form of deviceName
+    do shell script switchCommand
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>18DE991B-3DE7-4797-820D-F5E23A59760E</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>68</integer>
+				<key>keyword</key>
+				<string>audio out</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>please wait...</string>
+				<key>script</key>
+				<string>on run argv
+    -- SwitchAudioSourceコマンドを実行してオーディオデバイスのリストを取得
+    set audioDevices to paragraphs of (do shell script "/opt/homebrew/bin/SwitchAudioSource -a -t output")
+    
+    -- JSON形式の出力を構築
+    set jsonOutput to "{\"items\": ["
+    repeat with i from 1 to count of audioDevices
+        set thisDevice to item i of audioDevices
+        set jsonOutput to jsonOutput &amp; "{\"uid\": \"" &amp; i &amp; "\", \"title\": \"" &amp; thisDevice &amp; "\", \"arg\": \"" &amp; thisDevice &amp; "\"}"
+        if i is not count of audioDevices then
+            set jsonOutput to jsonOutput &amp; ","
+        end if
+    end repeat
+    set jsonOutput to jsonOutput &amp; "]}"
+    
+    return jsonOutput
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>audio out</string>
+				<key>title</key>
+				<string>Switch Speaker</string>
+				<key>type</key>
+				<integer>6</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>EED47B98-F6AB-453E-95B2-E7E5CA250C50</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string></string>
+				<key>title</key>
+				<string>Audio output switched: {query}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>E3917A0D-B94C-43CE-8D71-D5A55CC5F01F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>on run argv
+    set deviceName to item 1 of argv
+    set switchCommand to "/opt/homebrew/bin/SwitchAudioSource -t output -s " &amp; quoted form of deviceName
+    do shell script switchCommand
+end run</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>6</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>F4309860-D62E-49FF-BD43-97D1C5CCD0EF</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+	</array>
+	<key>readme</key>
+	<string></string>
+	<key>uidata</key>
+	<dict>
+		<key>18DE991B-3DE7-4797-820D-F5E23A59760E</key>
+		<dict>
+			<key>xpos</key>
+			<real>330</real>
+			<key>ypos</key>
+			<real>185</real>
+		</dict>
+		<key>CC7CA474-A46A-4AF2-97CD-789277FD7AE8</key>
+		<dict>
+			<key>xpos</key>
+			<real>335</real>
+			<key>ypos</key>
+			<real>70</real>
+		</dict>
+		<key>E3917A0D-B94C-43CE-8D71-D5A55CC5F01F</key>
+		<dict>
+			<key>xpos</key>
+			<real>330</real>
+			<key>ypos</key>
+			<real>300</real>
+		</dict>
+		<key>EED47B98-F6AB-453E-95B2-E7E5CA250C50</key>
+		<dict>
+			<key>xpos</key>
+			<real>150</real>
+			<key>ypos</key>
+			<real>290</real>
+		</dict>
+		<key>F4309860-D62E-49FF-BD43-97D1C5CCD0EF</key>
+		<dict>
+			<key>xpos</key>
+			<real>335</real>
+			<key>ypos</key>
+			<real>440</real>
+		</dict>
+		<key>F6A50B1C-B8EE-468A-978D-F8BA09B8BD8B</key>
+		<dict>
+			<key>xpos</key>
+			<real>150</real>
+			<key>ypos</key>
+			<real>70</real>
+		</dict>
+	</dict>
+	<key>userconfigurationconfig</key>
+	<array/>
+	<key>webaddress</key>
+	<string></string>
+</dict>
+</plist>
